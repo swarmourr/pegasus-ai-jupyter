@@ -5,6 +5,14 @@ import {
 
 import { ReactWidget, ToolbarButton } from '@jupyterlab/apputils';
 import { ILauncher } from '@jupyterlab/launcher';
+import { LabIcon } from '@jupyterlab/ui-components';
+
+const pegasusIcon = new LabIcon({
+  name: 'pegasus:logo',
+  svgstr: `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 100">
+    <image href="https://pegasus.isi.edu/documentation/_static/pegasus_circular_white_logo.png" x="0" y="0" width="100" height="100"/>
+  </svg>`,
+});
 import { INotebookTracker, NotebookActions } from '@jupyterlab/notebook';
 import { renderPegasusCell, isPegasusCell, setJupyterApp, setJupyterContext, PegasusPanelComponent, PegasusOpenCodePanelComponent } from './pegasusCell';
 import React from 'react';
@@ -48,8 +56,9 @@ const plugin: JupyterFrontEndPlugin<void> = {
     };
 
     app.commands.addCommand(CMD_PANEL, {
-      label: 'Open Pegasus Chat Panel',
+      label: 'Pegasus Chat',
       caption: 'Open Pegasus AI assistant as a side panel',
+      icon: pegasusIcon,
       execute: () => {
         _panelWidget = openPanel(
           _panelWidget,
@@ -66,8 +75,9 @@ const plugin: JupyterFrontEndPlugin<void> = {
     });
 
     app.commands.addCommand(CMD_OC_PANEL, {
-      label: 'Open Pegasus Assistant Panel',
+      label: 'Pegasus Assistant',
       caption: 'Open an embedded OpenCode terminal with Pegasus skill context',
+      icon: pegasusIcon,
       execute: () => {
         _ocPanelWidget = openPanel(
           _ocPanelWidget,
