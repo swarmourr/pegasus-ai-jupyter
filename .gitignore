@@ -36,3 +36,4 @@ Real estate.csv
 .yarn/install-state.gz
 .pnp.cjs
 .pnp.loader.mjs
+*.csv
