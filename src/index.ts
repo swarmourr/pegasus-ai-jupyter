@@ -4,6 +4,7 @@ import {
 } from '@jupyterlab/application';
 
 import { ReactWidget, ToolbarButton } from '@jupyterlab/apputils';
+import { ILauncher } from '@jupyterlab/launcher';
 import { INotebookTracker, NotebookActions } from '@jupyterlab/notebook';
 import { renderPegasusCell, isPegasusCell, setJupyterApp, setJupyterContext, PegasusPanelComponent, PegasusOpenCodePanelComponent } from './pegasusCell';
 import React from 'react';
@@ -21,8 +22,9 @@ const plugin: JupyterFrontEndPlugin<void> = {
   id: PLUGIN_ID,
   autoStart: true,
   requires: [INotebookTracker],
+  optional: [ILauncher],
 
-  activate: (app: JupyterFrontEnd, tracker: INotebookTracker) => {
+  activate: (app: JupyterFrontEnd, tracker: INotebookTracker, launcher: ILauncher | null) => {
     console.log('JupyterLab Pegasus extension activated');
     setJupyterApp(app);
 
@@ -116,6 +118,12 @@ const plugin: JupyterFrontEndPlugin<void> = {
       selector: '.jp-Notebook',
       rank: 10,
     });
+
+    // Launcher cards on the Home page
+    if (launcher) {
+      launcher.add({ command: CMD_PANEL,    category: 'Pegasus', rank: 1 });
+      launcher.add({ command: CMD_OC_PANEL, category: 'Pegasus', rank: 2 });
+    }
 
     // Keyboard shortcuts
     app.commands.addKeyBinding({ command: CMD_PANEL,    keys: ['Ctrl Shift P'], selector: 'body' });

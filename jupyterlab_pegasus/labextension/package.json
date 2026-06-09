@@ -23,7 +23,7 @@
     "outputDir": "jupyterlab_pegasus/labextension",
     "schemaDir": "schema",
     "_build": {
-      "load": "static/remoteEntry.cf84cb00ffd24e8c6e9d.js",
+      "load": "static/remoteEntry.1a13cf15f78f623a6b1d.js",
       "extension": "./extension",
       "style": "./style"
     }
@@ -42,14 +42,15 @@
     "@jupyterlab/application": "^4.0.0",
     "@jupyterlab/apputils": "^4.0.0",
     "@jupyterlab/cells": "^4.0.0",
+    "@jupyterlab/launcher": "^4.5.8",
     "@jupyterlab/notebook": "^4.0.0",
     "@jupyterlab/settingregistry": "^4.0.0",
     "@lumino/signaling": "^2.0.0",
     "@lumino/widgets": "^2.0.0",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0",
+    "@xterm/addon-fit": "^0.10.0",
     "@xterm/xterm": "^5.3.0",
-    "@xterm/addon-fit": "^0.10.0"
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
   },
   "devDependencies": {
     "@jupyterlab/builder": "^4.0.0",
