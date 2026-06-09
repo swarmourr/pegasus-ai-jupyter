@@ -23,7 +23,7 @@
     "outputDir": "jupyterlab_pegasus/labextension",
     "schemaDir": "schema",
     "_build": {
-      "load": "static/remoteEntry.8fccb8a4d5ba033c771c.js",
+      "load": "static/remoteEntry.cf84cb00ffd24e8c6e9d.js",
       "extension": "./extension",
       "style": "./style"
     }

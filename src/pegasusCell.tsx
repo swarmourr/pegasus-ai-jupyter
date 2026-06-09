@@ -11,6 +11,7 @@ export interface ChatMessage {
   role: 'user' | 'assistant';
   content: string;
   timestamp: string;
+  skill?: string;
   toolCalls?: ToolCall[];
 }
 
@@ -34,12 +35,17 @@ export function setJupyterApp(app: any): void { _app = app; }
 
 interface JupyterContext {
   filePath: string;       // e.g. "work/my_workflow.ipynb"
-  notebookDir: string;    // absolute server path to notebook folder
+  notebookDir: string;    // relative dir to server root
   cellSource: string;     // full source of the active cell
   selection: string;      // currently selected text (DOM selection)
+  notebookCells: string;  // all cell sources joined (full notebook)
+  lastError: string;      // last error from a failed cell execution
 }
 
-let _jupyterCtx: JupyterContext = { filePath: '', notebookDir: '.', cellSource: '', selection: '' };
+let _jupyterCtx: JupyterContext = {
+  filePath: '', notebookDir: '.', cellSource: '', selection: '',
+  notebookCells: '', lastError: '',
+};
 
 export function setJupyterContext(ctx: Partial<JupyterContext>): void {
   _jupyterCtx = { ..._jupyterCtx, ...ctx };
@@ -369,7 +375,10 @@ function UserMessage({ msg }: { msg: ChatMessage }) {
     <div className="pgc-msg pgc-msg--user">
       <div className="pgc-avatar pgc-avatar--user">me</div>
       <div className="pgc-msg-body">
-        <div className="pgc-msg-meta">you · {msg.timestamp}</div>
+        <div className="pgc-msg-meta">
+          you · {msg.timestamp}
+          {msg.skill && <span className="pgc-skill-badge">/{msg.skill}</span>}
+        </div>
         <div className="pgc-user-bubble">{msg.content}</div>
       </div>
     </div>
@@ -462,7 +471,7 @@ function PegasusCellComponent({ cell }: { cell: Cell }) {
     }
 
     const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    const userMsg: ChatMessage = { role: 'user', content: text, timestamp: now };
+    const userMsg: ChatMessage = { role: 'user', content: text, timestamp: now, skill };
     const nextMessages = [...messages, userMsg];
 
     setMessages(nextMessages);
@@ -729,7 +738,7 @@ export function PegasusPanelComponent(): JSX.Element {
     const text = input.trim();
     if (!text || streaming) return;
     const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    const userMsg: ChatMessage = { role: 'user', content: text, timestamp: now };
+    const userMsg: ChatMessage = { role: 'user', content: text, timestamp: now, skill };
     const nextMessages = [...messages, userMsg];
     setMessages(nextMessages); setInput(''); setStreaming(true); setStreamText(''); setStreamTools([]); setError(null);
     let accText = '';
@@ -868,12 +877,39 @@ export function renderPegasusCell(cell: Cell): void {
 
 // ─── Pegasus + OpenCode embedded panel ────────────────────────────────────────
 
+const THEME_LIGHT = {
+  background: '#ffffff', foreground: '#1e1e1e', cursor: '#555555',
+  selectionBackground: '#add6ff', black: '#000000', red: '#cd3131',
+  green: '#008000', yellow: '#795e26', blue: '#0070c1', magenta: '#af00db',
+  cyan: '#267f99', white: '#555555', brightBlack: '#666666', brightRed: '#f44747',
+  brightGreen: '#007700', brightYellow: '#a0522d', brightBlue: '#0070c1',
+  brightMagenta: '#af00db', brightCyan: '#267f99', brightWhite: '#1e1e1e',
+};
+const THEME_DARK = {
+  background: '#1e1e1e', foreground: '#d4d4d4', cursor: '#aeafad',
+  selectionBackground: '#264f78', black: '#000000', red: '#f44747',
+  green: '#4ec9b0', yellow: '#dcdcaa', blue: '#569cd6', magenta: '#c586c0',
+  cyan: '#9cdcfe', white: '#d4d4d4', brightBlack: '#808080', brightRed: '#f44747',
+  brightGreen: '#4ec9b0', brightYellow: '#dcdcaa', brightBlue: '#569cd6',
+  brightMagenta: '#c586c0', brightCyan: '#9cdcfe', brightWhite: '#ffffff',
+};
+
 export function PegasusOpenCodePanelComponent(): JSX.Element {
   const [agent, setAgent]   = useState('pegasus-workflow-architect');
   const [status, setStatus] = useState<'idle' | 'connecting' | 'connected' | 'error'>('idle');
   const [sessionName, setSessionName] = useState<string | null>(null);
-  const [pendingSel, setPendingSel] = useState<string>('');   // captured selection, not yet sent
-  const [sent, setSent]             = useState(false);         // flash on send
+  const [pendingSel, setPendingSel] = useState<string>('');
+  const [sent, setSent]             = useState(false);
+  const [isDark, setIsDark]         = useState(() => localStorage.getItem('pgc-oc-dark') === '1');
+  const [watchedFiles, setWatchedFiles] = useState<string[]>(() => {
+    try { return JSON.parse(localStorage.getItem('pgc-watch-files') ?? '[]'); } catch { return []; }
+  });
+  const [fileAlert, setFileAlert]   = useState<string | null>(null);
+  const [showWatch, setShowWatch]   = useState(false);
+  const [watchInput, setWatchInput] = useState('');
+  const isDarkRef   = useRef(isDark);
+  const watchRef    = useRef(watchedFiles);
+  const fileSnapRef = useRef<Record<string, string>>({});
   const containerRef = useRef<HTMLDivElement>(null);
   const termRef      = useRef<Terminal | null>(null);
   const wsRef        = useRef<WebSocket | null>(null);
@@ -918,28 +954,7 @@ export function PegasusOpenCodePanelComponent(): JSX.Element {
       fontFamily: 'var(--jp-code-font-family, "Source Code Pro", monospace)',
       cursorBlink: true,
       scrollback: 5000,
-      theme: {
-        background: '#ffffff',
-        foreground: '#1e1e1e',
-        cursor: '#555555',
-        selectionBackground: '#add6ff',
-        black: '#000000',
-        red: '#cd3131',
-        green: '#008000',
-        yellow: '#795e26',
-        blue: '#0070c1',
-        magenta: '#af00db',
-        cyan: '#267f99',
-        white: '#555555',
-        brightBlack: '#666666',
-        brightRed: '#f44747',
-        brightGreen: '#007700',
-        brightYellow: '#a0522d',
-        brightBlue: '#0070c1',
-        brightMagenta: '#af00db',
-        brightCyan: '#267f99',
-        brightWhite: '#1e1e1e',
-      },
+      theme: isDarkRef.current ? THEME_DARK : THEME_LIGHT,
     });
     const fit = new FitAddon();
     term.loadAddon(fit);
@@ -1043,10 +1058,88 @@ export function PegasusOpenCodePanelComponent(): JSX.Element {
     };
   }, []);
 
-  // Agent change — restart with the new agent (uses opencode --agent natively)
-  const handleAgent = (a: string) => {
-    setAgent(a);
-    launch(a);
+  // Agent change
+  const handleAgent = (a: string) => { setAgent(a); launch(a); };
+
+  // Dark/light toggle — updates xterm theme live
+  const toggleDark = () => {
+    const next = !isDarkRef.current;
+    isDarkRef.current = next;
+    setIsDark(next);
+    localStorage.setItem('pgc-oc-dark', next ? '1' : '0');
+    if (termRef.current) termRef.current.options.theme = next ? THEME_DARK : THEME_LIGHT;
+    if (containerRef.current) containerRef.current.style.background = next ? '#1e1e1e' : '#ffffff';
+  };
+
+  // Send full notebook as context
+  const syncNotebook = useCallback(() => {
+    const ws = wsRef.current;
+    if (!ws || ws.readyState !== WebSocket.OPEN) return;
+    const ctx = getJupyterContext();
+    if (!ctx.notebookCells) return;
+    ws.send(JSON.stringify(['stdin', `[Full notebook: ${ctx.filePath}]\n${ctx.notebookCells}` + '\r']));
+    setSent(true); setTimeout(() => setSent(false), 1500);
+  }, []);
+
+  // Send last error as context
+  const syncError = useCallback(() => {
+    const ws = wsRef.current;
+    if (!ws || ws.readyState !== WebSocket.OPEN) return;
+    const ctx = getJupyterContext();
+    if (!ctx.lastError) return;
+    ws.send(JSON.stringify(['stdin', `[Cell error]\n${ctx.lastError}` + '\r']));
+    setSent(true); setTimeout(() => setSent(false), 1500);
+  }, []);
+
+  // Keep refs in sync with state for use inside callbacks
+  useEffect(() => { isDarkRef.current = isDark; }, [isDark]);
+  useEffect(() => {
+    watchRef.current = watchedFiles;
+    localStorage.setItem('pgc-watch-files', JSON.stringify(watchedFiles));
+  }, [watchedFiles]);
+
+  // File watcher — poll every 3s
+  useEffect(() => {
+    const base = pageBase();
+    const poll = setInterval(async () => {
+      for (const path of watchRef.current) {
+        try {
+          const r = await fetch(`${window.location.origin}${base}api/contents/${path}`, {
+            headers: xsrfHeaders(),
+          });
+          if (!r.ok) continue;
+          const data = await r.json();
+          const content = data.content ?? '';
+          if (fileSnapRef.current[path] !== undefined && fileSnapRef.current[path] !== content) {
+            setFileAlert(`📄 ${path} changed`);
+            const ws = wsRef.current;
+            if (ws && ws.readyState === WebSocket.OPEN) {
+              ws.send(JSON.stringify(['stdin', `[File changed: ${path}]\n${content.slice(0, 800)}` + '\r']));
+            }
+          }
+          fileSnapRef.current[path] = content;
+        } catch { /* ignore */ }
+      }
+    }, 3000);
+    return () => clearInterval(poll);
+  }, []);
+
+  // Auto-send lastError to OpenCode when a cell fails
+  useEffect(() => {
+    const ctx = getJupyterContext();
+    if (!ctx.lastError) return;
+    const ws = wsRef.current;
+    if (ws && ws.readyState === WebSocket.OPEN) {
+      ws.send(JSON.stringify(['stdin', `[Cell execution error]\n${ctx.lastError}` + '\r']));
+    }
+  // poll every 2s for new errors
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const addWatchFile = () => {
+    const p = watchInput.trim();
+    if (p && !watchedFiles.includes(p)) setWatchedFiles(f => [...f, p]);
+    setWatchInput(''); setShowWatch(false);
   };
 
   const statusDot   = status === 'connected' ? '●' : status === 'connecting' ? '○' : status === 'error' ? '✕' : '○';
@@ -1071,6 +1164,10 @@ export function PegasusOpenCodePanelComponent(): JSX.Element {
             style={{ color: sent ? '#4ec9b0' : pendingSel ? '#f0c040' : undefined }}>
             {sent ? '✓' : '📎'}
           </button>
+          <button className="jp-pegasus-icon-btn" onClick={syncNotebook} title="Send full notebook as context">📓</button>
+          <button className="jp-pegasus-icon-btn" onClick={syncError} title="Send last cell error to OpenCode">⚠</button>
+          <button className="jp-pegasus-icon-btn" onClick={() => setShowWatch(v => !v)} title="Watch files">👁</button>
+          <button className="jp-pegasus-icon-btn" onClick={toggleDark} title="Toggle dark/light mode">{isDark ? '☀' : '🌙'}</button>
           <button className="jp-pegasus-icon-btn" onClick={() => launch(agent)} title="Restart OpenCode">↺</button>
         </div>
       </div>
@@ -1083,17 +1180,46 @@ export function PegasusOpenCodePanelComponent(): JSX.Element {
         </div>
       )}
 
-      {/* Embedded OpenCode terminal — fills remaining space */}
-      <div ref={containerRef} className="pgc-oc-terminal" />
+      {/* File alert */}
+      {fileAlert && (
+        <div className="pgc-oc-sel-banner" style={{ borderColor: '#4ec9b0' }}>
+          <span>{fileAlert}</span>
+          <button onClick={() => setFileAlert(null)}>✕</button>
+        </div>
+      )}
+
+      {/* File watcher input */}
+      {showWatch && (
+        <div className="pgc-oc-watch">
+          <div className="pgc-oc-watch__row">
+            <input className="pgc-oc-watch__input" value={watchInput}
+              onChange={e => setWatchInput(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && addWatchFile()}
+              placeholder="File path to watch (e.g. workflow.py)" />
+            <button onClick={addWatchFile}>Add</button>
+          </div>
+          {watchedFiles.length > 0 && (
+            <div className="pgc-oc-watch__list">
+              {watchedFiles.map(f => (
+                <span key={f} className="pgc-oc-watch__tag">
+                  {f} <button onClick={() => setWatchedFiles(fs => fs.filter(x => x !== f))}>✕</button>
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Embedded OpenCode terminal */}
+      <div ref={containerRef} className="pgc-oc-terminal"
+        style={{ background: isDark ? '#1e1e1e' : '#ffffff' }} />
 
       {sessionName && (
         <div className="pgc-oc-footer">
           <span>session: <code>{sessionName}</code></span>
           <div className="pgc-oc-footer__actions">
-            <button title="New session (kills current)"
-              onClick={() => { killSession(sessionName); launch(agent); }}>⊕ new</button>
-            <button title="Kill session"
-              onClick={() => { killSession(sessionName); setSessionName(null); wsRef.current?.close(); termRef.current?.dispose(); setStatus('idle'); }}>⊗ kill</button>
+            <button title="New session" onClick={() => { killSession(sessionName); launch(agent); }}>⊕ new</button>
+            <button title="Kill session" onClick={() => { killSession(sessionName); setSessionName(null); wsRef.current?.close(); termRef.current?.dispose(); setStatus('idle'); }}>⊗ kill</button>
           </div>
         </div>
       )}

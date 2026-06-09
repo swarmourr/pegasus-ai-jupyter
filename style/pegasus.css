@@ -861,3 +861,81 @@
 .pgc-oc-footer__actions button:hover {
   background: var(--jp-layout-color3, #ebebeb);
 }
+
+/* Skill badge on user messages */
+.pgc-skill-badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 0 5px;
+  border-radius: 3px;
+  background: var(--jp-brand-color1, #1976d2);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  vertical-align: middle;
+}
+
+/* File watcher UI */
+.pgc-oc-watch {
+  padding: 6px 10px;
+  background: var(--jp-layout-color1, #fafafa);
+  border-bottom: 1px solid var(--jp-border-color2, #e0e0e0);
+}
+
+.pgc-oc-watch__row {
+  display: flex;
+  gap: 6px;
+}
+
+.pgc-oc-watch__input {
+  flex: 1;
+  border: 1px solid var(--jp-border-color2, #e0e0e0);
+  border-radius: 4px;
+  padding: 3px 7px;
+  font-size: 11px;
+  outline: none;
+}
+
+.pgc-oc-watch__input:focus {
+  border-color: var(--jp-brand-color1, #1976d2);
+}
+
+.pgc-oc-watch__row button {
+  background: var(--jp-brand-color1, #1976d2);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 3px 10px;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.pgc-oc-watch__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 5px;
+}
+
+.pgc-oc-watch__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 1px 6px;
+  background: var(--jp-layout-color2, #f5f5f5);
+  border: 1px solid var(--jp-border-color2, #e0e0e0);
+  border-radius: 10px;
+  font-size: 10px;
+  font-family: var(--jp-code-font-family, monospace);
+}
+
+.pgc-oc-watch__tag button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-size: 9px;
+  line-height: 1;
+  color: #999;
+}

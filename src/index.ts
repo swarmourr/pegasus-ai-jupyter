@@ -117,20 +117,41 @@ const plugin: JupyterFrontEndPlugin<void> = {
       rank: 10,
     });
 
+    // Keyboard shortcuts
+    app.commands.addKeyBinding({ command: CMD_PANEL,    keys: ['Ctrl Shift P'], selector: 'body' });
+    app.commands.addKeyBinding({ command: CMD_OC_PANEL, keys: ['Ctrl Shift A'], selector: 'body' });
+
     // Keep JupyterContext in sync with the active notebook + cell
     const updateContext = () => {
       const panel = tracker.currentWidget;
       if (!panel) return;
       const filePath = panel.context.path;
-      // Jupyter terminals start at the server root, so use the relative dir
       const parts = filePath.split('/');
       const notebookDir = parts.length > 1 ? parts.slice(0, -1).join('/') : '.';
       const cellSource = tracker.activeCell?.model.sharedModel.getSource() ?? '';
-      setJupyterContext({ filePath, notebookDir, cellSource });
+      // Collect all cell sources for full notebook context
+      const cells = panel.content.widgets;
+      const notebookCells = cells.map((c, i) =>
+        `# Cell ${i + 1}\n${c.model.sharedModel.getSource()}`
+      ).join('\n\n');
+      setJupyterContext({ filePath, notebookDir, cellSource, notebookCells });
     };
 
     tracker.currentChanged.connect(updateContext);
     tracker.activeCellChanged.connect(updateContext);
+
+    // Detect failed cell executions and store error in context
+    NotebookActions.executed.connect((_, args: any) => {
+      if (args.success) { setJupyterContext({ lastError: '' }); return; }
+      const outputs: any[] = args.cell?.model?.outputs?.toJSON?.() ?? [];
+      const err = outputs.find((o: any) => o.output_type === 'error');
+      if (err) {
+        const tb = (err.traceback as string[] ?? [])
+          .map((l: string) => l.replace(/\x1b\[[0-9;]*m/g, ''))
+          .join('\n');
+        setJupyterContext({ lastError: `${err.ename}: ${err.evalue}\n${tb}` });
+      }
+    });
 
     tracker.widgetAdded.connect((_, notebookPanel) => {
       const btn = new ToolbarButton({
