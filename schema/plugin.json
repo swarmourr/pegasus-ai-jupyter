@@ -1,0 +1,40 @@
+{
+  "jupyter.lab.setting-icon-label": "Pegasus",
+  "title": "Pegasus WMS",
+  "description": "Settings for the JupyterLab Pegasus extension.",
+  "type": "object",
+  "properties": {
+    "provider": {
+      "title": "LLM provider",
+      "description": "LLM provider to use. Config is also read from ~/.pegasus-ai/.env.",
+      "type": "string",
+      "enum": ["anthropic", "openai", "fabric", "nrp", "ollama", "custom"],
+      "default": "anthropic"
+    },
+    "model": {
+      "title": "Model",
+      "description": "Model name. Leave blank to use the provider default.",
+      "type": "string",
+      "default": ""
+    },
+    "apiKey": {
+      "title": "API key",
+      "description": "API key for the selected provider.",
+      "type": "string",
+      "default": ""
+    },
+    "baseUrl": {
+      "title": "Base URL",
+      "description": "Custom base URL (for custom/NRP/FABRIC providers).",
+      "type": "string",
+      "default": ""
+    },
+    "knowledgePath": {
+      "title": "Knowledge store path",
+      "description": "Path to the Pegasus knowledge store. Defaults to /opt/pegasus-ai/knowledge/ if it exists.",
+      "type": "string",
+      "default": ""
+    }
+  },
+  "additionalProperties": false
+}

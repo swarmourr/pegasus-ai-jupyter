@@ -1,0 +1,4 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "instructions": "You are working inside a Pegasus WMS JupyterLab extension. The project provides 9 skills (scaffold, debug, review, wrapper, dockerfile, convert, help, kiso, provd) and 3 agents (workflow-architect, data-engineer, pipeline-debugger). Follow Pegasus WMS best practices.\n\nIMPORTANT: At the start of every conversation and whenever the user refers to 'the selected part', 'this code', 'the current cell', or 'what I have open', immediately read the file .opencode/jupyter_context.md — it contains the currently selected text and active cell from JupyterLab. Always use this context to answer questions about the notebook."
+}

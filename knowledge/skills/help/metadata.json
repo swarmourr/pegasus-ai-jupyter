@@ -1,0 +1,5 @@
+{
+  "name": "Help",
+  "description": "Overview of all available Pegasus AI skills and how to use them",
+  "slash_command": "/help"
+}

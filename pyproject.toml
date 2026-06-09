@@ -1,0 +1,36 @@
+[build-system]
+requires = ["hatchling>=1.5.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "jupyterlab-pegasus"
+version = "0.1.0"
+description = "Pegasus WMS interactive cell for JupyterLab"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.8"
+dependencies = [
+    "jupyter_server>=2.0",
+    "anthropic>=0.25.0",
+    "openai>=1.0.0",
+    "httpx>=0.25.0",
+    "python-dotenv>=1.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-asyncio",
+    "jupyter_server[test]>=2.0",
+    "jupyterlab>=4.0.0,<5",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["jupyterlab_pegasus"]
+artifacts = [
+  "jupyterlab_pegasus/labextension",
+  "jupyterlab_pegasus/opencode_data",
+]
+
+[tool.hatch.build.targets.wheel.shared-data]
+"jupyter-config/jupyter_server_config.d/jupyterlab_pegasus.json" = "etc/jupyter/jupyter_server_config.d/jupyterlab_pegasus.json"

@@ -1,0 +1,5 @@
+{
+  "name": "Convert",
+  "description": "Convert a Snakemake or Nextflow pipeline to Pegasus WMS format",
+  "slash_command": "/convert"
+}

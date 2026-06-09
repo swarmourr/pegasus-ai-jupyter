@@ -1,0 +1,863 @@
+/* ─── Pegasus Cell — JupyterLab native styling ──────────────────────────────
+   Uses --jp-* CSS variables so the cell automatically adapts to any
+   JupyterLab theme (light, dark, custom).
+   ──────────────────────────────────────────────────────────────────────── */
+
+/* ── Outer wrapper ── */
+.jp-pegasus-cell {
+  border: 1px solid var(--jp-brand-color1, #1976d2);
+  border-radius: 6px;
+  background: var(--jp-layout-color1, #fff);
+  font-family: var(--jp-ui-font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
+  font-size: var(--jp-ui-font-size1, 13px);
+  color: var(--jp-content-font-color1, #212121);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 560px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+/* ── Header ── */
+.jp-pegasus-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: var(--jp-brand-color1, #1976d2);
+  border-radius: 5px 5px 0 0;
+  min-height: 38px;
+  flex-shrink: 0;
+}
+
+.jp-pegasus-header__left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.jp-pegasus-header__right {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.jp-pegasus-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+
+.jp-pegasus-agent-select {
+  height: 24px;
+  padding: 0 6px;
+  border: 1px solid rgba(255,255,255,0.4);
+  border-radius: 4px;
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  font-size: 11px;
+  font-family: var(--jp-ui-font-family);
+  cursor: pointer;
+}
+
+.jp-pegasus-agent-select option {
+  background: var(--jp-layout-color1, #fff);
+  color: var(--jp-content-font-color1, #212121);
+}
+
+.jp-pegasus-icon-btn {
+  width: 26px;
+  height: 26px;
+  border: none;
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.jp-pegasus-icon-btn:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+.jp-pegasus-icon-btn--active {
+  background: rgba(255,255,255,0.35);
+}
+
+/* ── Skill pills ── */
+.jp-pegasus-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 8px 12px;
+  background: var(--jp-layout-color2, #f5f5f5);
+  border-bottom: 1px solid var(--jp-border-color2, #e0e0e0);
+  flex-shrink: 0;
+}
+
+.jp-pegasus-skill-pill {
+  padding: 3px 11px;
+  border-radius: 12px;
+  border: 1px solid var(--jp-border-color1, #bdbdbd);
+  background: var(--jp-layout-color1, #fff);
+  color: var(--jp-content-font-color2, #616161);
+  font-size: 11px;
+  font-family: var(--jp-ui-font-family);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.1s;
+}
+
+.jp-pegasus-skill-pill:hover {
+  border-color: var(--jp-brand-color1, #1976d2);
+  color: var(--jp-brand-color1, #1976d2);
+  background: var(--jp-brand-color2, #e3f2fd);
+}
+
+.jp-pegasus-skill-pill--active {
+  border-color: var(--jp-brand-color1, #1976d2);
+  background: var(--jp-brand-color1, #1976d2);
+  color: #fff;
+  font-weight: 500;
+}
+
+/* ── Messages area ── */
+.jp-pegasus-messages {
+  padding: 16px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  flex: 1;
+  min-height: 360px;
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+/* ── Empty state ── */
+.jp-pegasus-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 40px 20px;
+  color: var(--jp-content-font-color3, #9e9e9e);
+  text-align: center;
+  flex: 1;
+}
+
+.jp-pegasus-empty__icon {
+  font-size: 36px;
+  color: var(--jp-brand-color1, #1976d2);
+  opacity: 0.3;
+}
+
+.jp-pegasus-empty__title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--jp-content-font-color2, #616161);
+}
+
+.jp-pegasus-empty__text {
+  font-size: 12px;
+  line-height: 1.7;
+  max-width: 380px;
+}
+
+.jp-pegasus-empty__text code {
+  background: var(--jp-layout-color2, #f5f5f5);
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-family: var(--jp-code-font-family, monospace);
+  font-size: 11px;
+  color: var(--jp-brand-color1, #1976d2);
+}
+
+.jp-pegasus-empty__examples {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.jp-pegasus-example-btn {
+  padding: 7px 16px;
+  border-radius: 16px;
+  border: 1px dashed var(--jp-border-color1, #bdbdbd);
+  background: transparent;
+  color: var(--jp-content-font-color2, #616161);
+  font-size: 12px;
+  font-family: var(--jp-ui-font-family);
+  cursor: pointer;
+}
+
+.jp-pegasus-example-btn:hover {
+  border-color: var(--jp-brand-color1, #1976d2);
+  color: var(--jp-brand-color1, #1976d2);
+  background: var(--jp-brand-color2, #e3f2fd);
+}
+
+/* ── Individual messages ── */
+.pgc-msg {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.pgc-avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.pgc-avatar--user {
+  background: var(--jp-layout-color3, #e0e0e0);
+  color: var(--jp-content-font-color2, #616161);
+}
+
+.pgc-avatar--ai {
+  background: var(--jp-brand-color1, #1976d2);
+  color: #fff;
+}
+
+.pgc-msg-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.pgc-msg-meta {
+  font-size: 10px;
+  color: var(--jp-content-font-color3, #9e9e9e);
+  margin-bottom: 4px;
+  font-family: var(--jp-code-font-family, 'Source Code Pro', monospace);
+}
+
+.pgc-user-bubble {
+  display: inline-block;
+  background: var(--jp-layout-color2, #eeeeee);
+  border: 1px solid var(--jp-border-color2, #e0e0e0);
+  border-radius: 4px 14px 14px 14px;
+  padding: 8px 12px;
+  font-size: 13px;
+  line-height: 1.6;
+  max-width: 92%;
+  white-space: pre-wrap;
+}
+
+.pgc-msg-text {
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+/* ── Code blocks ── */
+.pgc-code-block {
+  background: var(--jp-layout-color0, #fafafa);
+  border: 1px solid var(--jp-border-color2, #e0e0e0);
+  border-radius: 4px;
+  padding: 10px 12px;
+  margin: 8px 0;
+  overflow-x: auto;
+}
+
+.pgc-code-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid var(--jp-border-color3, #eeeeee);
+}
+
+.pgc-code-lang {
+  font-family: var(--jp-code-font-family, 'Source Code Pro', monospace);
+  font-size: 10px;
+  color: var(--jp-content-font-color3, #9e9e9e);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.pgc-code-copy {
+  font-size: 11px;
+  color: var(--jp-brand-color1, #1976d2);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-family: var(--jp-ui-font-family);
+}
+
+.pgc-code-pre {
+  font-family: var(--jp-code-font-family, 'Source Code Pro', monospace);
+  font-size: 12px;
+  line-height: 1.6;
+  white-space: pre;
+  margin: 0;
+  color: var(--jp-content-font-color1, #212121);
+}
+
+/* ── Tool results ── */
+.pgc-tool-result {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  margin: 4px 0;
+  font-family: var(--jp-code-font-family, 'Source Code Pro', monospace);
+}
+
+.pgc-tool-result--success {
+  background: var(--jp-success-color2, #e8f5e9);
+  border: 1px solid #c8e6c9;
+  color: var(--jp-success-color1, #388e3c);
+}
+
+.pgc-tool-result--running {
+  background: var(--jp-info-color2, #e1f5fe);
+  border: 1px solid #b3e5fc;
+  color: var(--jp-info-color1, #0277bd);
+}
+
+.pgc-tool-icon { font-size: 12px; flex-shrink: 0; }
+.pgc-tool-name { font-weight: 600; flex-shrink: 0; }
+.pgc-tool-text { opacity: 0.8; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ── Streaming dots ── */
+.pgc-streaming {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 0;
+}
+
+.pgc-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--jp-brand-color1, #1976d2);
+  animation: pgc-pulse 1.2s ease-in-out infinite;
+}
+
+.pgc-dot:nth-child(2) { animation-delay: 0.2s; }
+.pgc-dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes pgc-pulse {
+  0%, 80%, 100% { opacity: 0.25; }
+  40%           { opacity: 1; }
+}
+
+/* ── Error ── */
+.pgc-error {
+  padding: 8px 12px;
+  background: var(--jp-error-color2, #ffebee);
+  border: 1px solid #ffcdd2;
+  border-radius: 4px;
+  color: var(--jp-error-color1, #d32f2f);
+  font-size: 12px;
+}
+
+/* ── Quick action bar ── */
+.jp-pegasus-actions {
+  display: flex;
+  gap: 6px;
+  padding: 8px 12px;
+  border-top: 1px solid var(--jp-border-color3, #eeeeee);
+  flex-wrap: wrap;
+  background: var(--jp-layout-color1, #fff);
+  flex-shrink: 0;
+}
+
+.jp-pegasus-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--jp-border-color1, #bdbdbd);
+  background: var(--jp-layout-color1, #fff);
+  color: var(--jp-content-font-color2, #616161);
+  font-size: 11px;
+  font-family: var(--jp-ui-font-family);
+  cursor: pointer;
+}
+
+.jp-pegasus-action-btn:hover {
+  background: var(--jp-layout-color2, #eeeeee);
+}
+
+.jp-pegasus-action-btn--primary {
+  border-color: var(--jp-brand-color1, #1976d2);
+  color: var(--jp-brand-color1, #1976d2);
+}
+
+.jp-pegasus-action-btn--opencode {
+  border-color: #2e7d32;
+  color: #2e7d32;
+  font-family: var(--jp-code-font-family, monospace);
+  margin-left: auto;
+}
+
+.jp-pegasus-action-btn--opencode.jp-pegasus-action-btn--active {
+  background: #2e7d32;
+  color: #fff;
+}
+
+/* ── Embedded terminal ── */
+.pgc-terminal {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid #444;
+  background: #1e1e1e;
+}
+
+.pgc-terminal-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px;
+  background: #2d2d2d;
+  border-bottom: 1px solid #444;
+  font-size: 11px;
+  font-family: var(--jp-code-font-family, monospace);
+}
+
+.pgc-terminal-title {
+  color: #9cdcfe;
+  flex: 1;
+}
+
+.pgc-terminal-status {
+  font-size: 10px;
+}
+
+.pgc-terminal-status--connecting { color: #d7ba7d; }
+.pgc-terminal-status--connected  { color: #4ec9b0; }
+.pgc-terminal-status--error      { color: #f44747; }
+
+.pgc-terminal-close {
+  color: #888;
+  font-size: 12px;
+}
+
+.pgc-terminal-close:hover {
+  color: #f44747;
+  background: transparent;
+  border-color: transparent;
+}
+
+.pgc-terminal-body {
+  height: 320px;
+  overflow: hidden;
+}
+
+/* ── Input area ── */
+.jp-pegasus-input {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 10px 12px;
+  border-top: 1px solid var(--jp-border-color2, #e0e0e0);
+  background: var(--jp-layout-color1, #fff);
+  border-radius: 0 0 5px 5px;
+  flex-shrink: 0;
+}
+
+.jp-pegasus-input__inner {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--jp-border-color1, #bdbdbd);
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--jp-layout-color1, #fff);
+}
+
+.jp-pegasus-input__inner:focus-within {
+  border-color: var(--jp-brand-color1, #1976d2);
+  box-shadow: 0 0 0 2px rgba(25,118,210,0.12);
+}
+
+.jp-pegasus-input__skill-tag {
+  padding: 3px 10px;
+  font-size: 10px;
+  font-family: var(--jp-code-font-family, monospace);
+  color: var(--jp-brand-color1, #1976d2);
+  background: var(--jp-brand-color2, #e3f2fd);
+  border-bottom: 1px solid var(--jp-border-color2, #e0e0e0);
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+.jp-pegasus-textarea {
+  width: 100%;
+  border: none;
+  padding: 8px 10px;
+  font-size: 13px;
+  font-family: var(--jp-ui-font-family);
+  color: var(--jp-content-font-color1, #212121);
+  background: transparent;
+  resize: none;
+  line-height: 1.6;
+  min-height: 60px;
+  box-sizing: border-box;
+}
+
+.jp-pegasus-textarea:focus {
+  outline: none;
+}
+
+.jp-pegasus-textarea:disabled {
+  opacity: 0.6;
+}
+
+.jp-pegasus-send-btn {
+  height: 44px;
+  width: 44px;
+  border-radius: 8px;
+  border: none;
+  background: var(--jp-brand-color1, #1976d2);
+  color: #fff;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  align-self: flex-end;
+}
+
+.jp-pegasus-send-btn:hover:not(:disabled) {
+  background: #1565c0;
+}
+
+.jp-pegasus-send-btn--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── Config panel ── */
+.pgc-config {
+  border-bottom: 1px solid var(--jp-border-color2, #e0e0e0);
+  background: var(--jp-layout-color2, #f5f5f5);
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.pgc-config-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.pgc-config-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--jp-content-font-color1, #212121);
+}
+
+.pgc-config-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pgc-config-label {
+  font-size: 11px;
+  color: var(--jp-content-font-color2, #616161);
+  width: 68px;
+  flex-shrink: 0;
+}
+
+.pgc-config-input {
+  flex: 1;
+  height: 26px;
+  padding: 0 8px;
+  border: 1px solid var(--jp-border-color1, #bdbdbd);
+  border-radius: 4px;
+  background: var(--jp-layout-color1, #fff);
+  color: var(--jp-content-font-color1, #212121);
+  font-size: 12px;
+  font-family: var(--jp-ui-font-family);
+}
+
+/* reuse for config panel icon button */
+.pgc-config .jp-pegasus-icon-btn {
+  background: transparent;
+  color: var(--jp-content-font-color2, #616161);
+}
+
+.pgc-config .jp-pegasus-icon-btn:hover {
+  background: var(--jp-layout-color3, #e0e0e0);
+}
+
+.pgc-config-footer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pgc-config-err {
+  font-size: 11px;
+  color: var(--jp-error-color1, #d32f2f);
+}
+
+.pgc-config-hint {
+  font-size: 11px;
+  color: var(--jp-content-font-color3, #9e9e9e);
+  font-style: italic;
+}
+
+.pgc-config-hint--ok   { color: var(--jp-success-color1, #388e3c); font-style: normal; }
+.pgc-config-hint--warn { color: #f57c00; font-style: normal; }
+
+/* jp-pegasus-select used in config panel */
+.jp-pegasus-select {
+  height: 26px;
+  padding: 0 6px;
+  border: 1px solid var(--jp-border-color1, #bdbdbd);
+  border-radius: 4px;
+  background: var(--jp-layout-color1, #fff);
+  color: var(--jp-content-font-color1, #212121);
+  font-size: 12px;
+  font-family: var(--jp-ui-font-family);
+  cursor: pointer;
+}
+
+/* ── Panel mode (side-by-side with notebook) ── */
+.jp-pegasus-panel {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  border-radius: 0;
+  border: none;
+  min-height: 0;
+}
+
+.jp-pegasus-panel .jp-pegasus-messages {
+  flex: 1;
+  min-height: 0;
+}
+
+/* ── OpenCode redirect banner ── */
+.pgc-opencode-redirect {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 8px 12px;
+  padding: 12px 14px;
+  background: #1a2332;
+  border: 1px solid #2e7d32;
+  border-radius: 6px;
+  color: #e0e0e0;
+}
+
+.pgc-opencode-redirect__icon {
+  font-family: var(--jp-code-font-family, monospace);
+  font-size: 18px;
+  color: #4ec9b0;
+  padding-top: 2px;
+  flex-shrink: 0;
+}
+
+.pgc-opencode-redirect__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.pgc-opencode-redirect__title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.pgc-opencode-redirect__msg {
+  font-size: 12px;
+  color: #9cdcfe;
+  font-style: italic;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 10px;
+}
+
+.pgc-opencode-redirect__actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.pgc-opencode-redirect__btn {
+  padding: 5px 12px;
+  border-radius: 4px;
+  border: 1px solid #555;
+  background: #2d2d2d;
+  color: #ccc;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.pgc-opencode-redirect__btn:hover {
+  background: #3a3a3a;
+}
+
+.pgc-opencode-redirect__btn--primary {
+  background: #2e7d32;
+  border-color: #2e7d32;
+  color: #fff;
+  font-weight: 600;
+}
+
+.pgc-opencode-redirect__btn--primary:hover {
+  background: #388e3c;
+}
+
+.pgc-opencode-redirect__btn--dismiss {
+  margin-left: auto;
+  padding: 4px 8px;
+  background: transparent;
+  border-color: transparent;
+  color: #888;
+}
+
+.pgc-opencode-redirect__btn--dismiss:hover {
+  color: #f44747;
+  background: transparent;
+}
+
+/* ── Pegasus + OpenCode embedded panel ── */
+.jp-pegasus-oc-panel {
+  overflow: hidden;
+  background: var(--jp-layout-color1, #fff);
+}
+
+/* Light-mode overrides for the OC panel chrome */
+.jp-pegasus-oc-panel .jp-pegasus-skills {
+  background: var(--jp-layout-color2, #f5f5f5);
+  border-bottom: 1px solid var(--jp-border-color2, #e0e0e0);
+}
+
+.jp-pegasus-oc-panel .jp-pegasus-skill-pill {
+  background: var(--jp-layout-color1, #fff);
+  color: var(--jp-content-font-color1, #212121);
+  border-color: var(--jp-border-color1, #bdbdbd);
+}
+
+.jp-pegasus-oc-panel .jp-pegasus-skill-pill--active {
+  background: var(--jp-brand-color1, #1976d2);
+  color: #fff;
+  border-color: var(--jp-brand-color1, #1976d2);
+}
+
+/* Terminal fills remaining space */
+.pgc-oc-terminal {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.pgc-oc-terminal .xterm {
+  position: absolute !important;
+  top: 0; left: 0; right: 0; bottom: 0;
+  height: 100% !important;
+  width: 100% !important;
+}
+
+.pgc-oc-terminal .xterm-viewport {
+  width: 100% !important;
+  overflow-y: scroll !important;
+}
+
+.pgc-oc-terminal .xterm-screen canvas {
+  display: block;
+}
+
+.pgc-oc-sel-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 10px;
+  background: #fff8e1;
+  border-bottom: 1px solid #f0c040;
+  font-size: 11px;
+  color: #7c6200;
+  gap: 8px;
+}
+
+.pgc-oc-sel-banner button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #7c6200;
+  font-size: 11px;
+  padding: 0 2px;
+  line-height: 1;
+}
+
+.pgc-oc-subtitle {
+  font-size: 10px;
+  color: rgba(255,255,255,0.6);
+  font-style: italic;
+  margin-left: 2px;
+  margin-right: 4px;
+  white-space: nowrap;
+}
+
+.pgc-oc-status {
+  font-family: var(--jp-code-font-family, monospace);
+  font-size: 11px;
+  margin-right: 4px;
+}
+
+.pgc-oc-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 10px;
+  font-size: 11px;
+  color: var(--jp-content-font-color2, #616161);
+  font-family: var(--jp-code-font-family, monospace);
+  background: var(--jp-layout-color2, #f5f5f5);
+  border-top: 1px solid var(--jp-border-color2, #e0e0e0);
+}
+
+.pgc-oc-footer__actions {
+  display: flex;
+  gap: 6px;
+}
+
+.pgc-oc-footer__actions button {
+  background: none;
+  border: 1px solid var(--jp-border-color2, #e0e0e0);
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 10px;
+  padding: 1px 6px;
+  color: var(--jp-content-font-color2, #616161);
+}
+
+.pgc-oc-footer__actions button:hover {
+  background: var(--jp-layout-color3, #ebebeb);
+}
